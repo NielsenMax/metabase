@@ -6,6 +6,9 @@
      themes, but text-primary-inverse flips to a dark color in dark mode. */
   --mb-color-text-primary-inverse: var(--mantine-color-white);
 
+  /* The default focus colour is too close to the purple navbar to see */
+  --mb-color-input-focus: var(--mb-color-text-primary-inverse);
+
   /* Drive navbar text color directly so we don't depend on Mantine's c= prop,
      which resolves to a separate auto-derived `-text` variable. */
   color: var(--mb-color-text-primary-inverse);

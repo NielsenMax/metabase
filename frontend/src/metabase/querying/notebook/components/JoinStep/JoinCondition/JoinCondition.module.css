@@ -1,4 +1,7 @@
 .JoinConditionRoot {
+  /* The default focus colour matches this fill, so rings follow the text colour */
+  --mb-color-input-focus: var(--mb-color-text-primary-inverse);
+
   border-radius: 0.5rem;
   background-color: var(--mb-color-background_surface-brand-strong);
 }

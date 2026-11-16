@@ -2,7 +2,14 @@
   background-color: var(--mb-color-core-brand);
 }
 
+/* The default focus colour is too close to the brand and admin bars to see, so rings there follow the bar's text colour */
+.root[data-location="app"] {
+  --mb-color-input-focus: var(--mb-color-text-primary-inverse);
+}
+
 .root[data-location="admin"] {
+  --mb-color-input-focus: var(--mb-color-core-white_constant);
+
   background-color: var(--mb-color-navbar-admin);
 }
 
