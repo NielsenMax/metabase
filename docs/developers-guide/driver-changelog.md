@@ -7,6 +7,13 @@ summary: Changes to the Metabase driver interface, listed by release.
 
 ## Metabase 0.66.0
 
+- New test-only features `:test/python-transforms-without-atomic-renames` and `:test/python-transforms-without-renames`.
+  A driver with `:transforms/python` but not `:atomic-renames` replaces a Python transform's target non-atomically,
+  and `metabase.transforms.execute-test/python-transform-replace-strategy-test` now fails unless the driver's test
+  extensions acknowledge that. Support `:test/python-transforms-without-atomic-renames` if the driver supports
+  `:rename`, and `:test/python-transforms-without-renames` if it doesn't. Better, implement
+  `metabase.driver/rename-tables!*` and support `:atomic-renames`.
+
 - `metabase.driver.sql-jdbc.execute/execute-write-statement!` `[driver stmt sql]` -- new multimethod that runs a
   statement returning no rows, such as DDL, INSERT, UPDATE or DELETE, and returns the number of rows it affected.
   `stmt` is a `PreparedStatement` with its parameters set, or a plain `Statement` on which to run `sql`. The default
