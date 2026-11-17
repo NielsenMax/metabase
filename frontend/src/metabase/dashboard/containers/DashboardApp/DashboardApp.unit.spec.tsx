@@ -714,6 +714,7 @@ describe("DashboardApp", () => {
       );
 
       const heading = screen.getByTestId("dashboard-name-heading");
+      expect(heading).toHaveValue("Orders in a dashboard");
       await userEvent.clear(heading);
       await userEvent.type(heading, "Dash");
       await userEvent.tab();
