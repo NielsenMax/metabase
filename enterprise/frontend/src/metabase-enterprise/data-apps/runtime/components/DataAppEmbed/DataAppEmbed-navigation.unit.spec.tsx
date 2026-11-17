@@ -11,7 +11,7 @@ import userEvent from "@testing-library/user-event";
 
 import { render, renderHook, screen } from "__support__/ui";
 import { getSdkStore } from "embedding-sdk-bundle/store";
-import { useDataAppLocation } from "embedding-sdk-package/hooks/public/use-data-app-location";
+import { useDataAppLocation } from "embedding-sdk-package/data-apps/public/hooks/use-data-app-location";
 
 import { DataAppEmbed } from "./DataAppEmbed";
 import { useDataAppPathNavigation } from "./hooks/use-data-app-path-navigation";

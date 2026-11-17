@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 
 import { sdkBundleExports } from "embedding-sdk-bundle/sdk-bundle-exports";
 import { getSdkStore } from "embedding-sdk-bundle/store";
-import { isEmbeddedDataAppPath } from "embedding-sdk-shared/lib/embedded-data-app-path";
+import { isEmbeddedDataAppPath } from "embedding-sdk-shared/data-apps/embedded-data-app-path";
 import { createSnowplowTracker, setSnowplowPageUrl } from "metabase/analytics";
 import { getUserId } from "metabase/current-user";
 import {
