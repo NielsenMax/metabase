@@ -21,7 +21,8 @@
    [:definition {:optional true} [:maybe :string]]
    [:created_at {:optional true} [:maybe ms/TemporalInstant]]
    [:updated_at {:optional true} [:maybe ms/TemporalInstant]]
-   [:creator_id {:optional true} [:maybe ::lib.schema.id/user]]])
+   [:creator_id {:optional true} [:maybe ::lib.schema.id/user]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::external-glossary
   "A Glossary as serialization writes it, with portable references in place of ids."

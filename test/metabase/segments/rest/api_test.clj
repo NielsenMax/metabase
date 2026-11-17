@@ -89,6 +89,7 @@
               :creator_id              (mt/user->id :crowberto)
               :creator                 (user-details (mt/fetch-user :crowberto))
               :entity_id               true
+              :worktree_id             nil
               :created_at              true
               :updated_at              true
               :archived                false
@@ -171,6 +172,7 @@
                   :creator_id              (mt/user->id :rasta)
                   :creator                 (user-details (mt/fetch-user :rasta))
                   :entity_id               true
+                  :worktree_id             nil
                   :created_at              true
                   :updated_at              true
                   :archived                false
@@ -270,6 +272,7 @@
                  :created_at              true
                  :updated_at              true
                  :entity_id               true
+                 :worktree_id             nil
                  :archived                true
                  :definition true}
                 (-> (mt/user-http-request :crowberto :get 200 (format "segment/%d" id))
@@ -305,6 +308,7 @@
                     :created_at              true
                     :updated_at              true
                     :entity_id               true
+                    :worktree_id             nil
                     :archived                false
                     :definition              true}
                    (-> (mt/user-http-request :rasta :get 200 (format "segment/%d" id))

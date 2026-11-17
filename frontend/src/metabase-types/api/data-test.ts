@@ -1,5 +1,6 @@
 import type { Card, CardId } from "./card";
 import type { DataTestRun } from "./data-test-run";
+import type { RemoteSyncWorktreeId } from "./remote-sync";
 import type { Transform, TransformId } from "./transform";
 import type { UserId } from "./user";
 
@@ -63,6 +64,7 @@ export type TransformTest = {
   updated_at: string;
   last_run: DataTestRun | null;
   transform?: Transform;
+  worktree_id: RemoteSyncWorktreeId | null;
 };
 
 export type ListTransformTestsRequest = {
@@ -98,4 +100,5 @@ export type CardTest = {
   created_at: string;
   updated_at: string;
   card?: Card;
+  worktree_id: RemoteSyncWorktreeId | null;
 };

@@ -204,4 +204,5 @@
    [:error_message           {:optional true} [:maybe :string]]
    [:version                 {:optional true} [:maybe :string]]
    [:conflicts               {:optional true} [:maybe [:or [:sequential :string] [:set :string]]]]
-   [:outcome                 {:optional true} [:maybe ::remote-sync-task.outcome]]])
+   [:outcome                 {:optional true} [:maybe ::remote-sync-task.outcome]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])

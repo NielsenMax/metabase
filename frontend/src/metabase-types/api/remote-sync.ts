@@ -309,6 +309,8 @@ export type RemoteSyncTaskUser = {
   email: string;
 };
 
+export type RemoteSyncWorktreeId = number;
+
 export type RemoteSyncTask = {
   id: RemoteSyncTaskId;
   sync_task_type: RemoteSyncTaskType;
@@ -322,6 +324,7 @@ export type RemoteSyncTask = {
   outcome?: RemoteSyncOutcome | null;
   conflicts?: string[] | null;
   initiated_by_user?: RemoteSyncTaskUser | null;
+  worktree_id: RemoteSyncWorktreeId | null;
 };
 
 export type GetBranchesResponse = {

@@ -30,6 +30,7 @@
     :public_uuid
     :public_uuid_prefix
     :updated_at
+    :worktree_id
     :view_count})
 
 (defmethod revision/revert-to-revision! :model/Card

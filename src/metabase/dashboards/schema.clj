@@ -86,7 +86,8 @@
    [:archived_directly       {:optional true} [:maybe :boolean]]
    [:last_viewed_at          {:optional true} [:maybe ms/TemporalInstant]]
    [:embedding_type          {:optional true} [:maybe [:string {:decode/normalize lib.schema.common/normalize-string-key}]]]
-   [:public_uuid_prefix      {:optional true} [:maybe :string]]])
+   [:public_uuid_prefix      {:optional true} [:maybe :string]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::dashboard-card.parameter-mapping
   "One entry of the `:parameter_mappings` column of a DashboardCard, decoded."
@@ -129,7 +130,8 @@
    [:entity_id              {:optional true} [:maybe :string]]
    [:action_id              {:optional true} [:maybe ::lib.schema.id/action]]
    [:dashboard_tab_id       {:optional true} [:maybe ::lib.schema.id/dashboard-tab]]
-   [:inline_parameters      {:optional true} [:maybe [:sequential :string]]]])
+   [:inline_parameters      {:optional true} [:maybe [:sequential :string]]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::dashboard-card-series
   "A DashboardCardSeries as selected from the app DB: every column of `:dashboardcard_series`."
@@ -160,7 +162,8 @@
    [:position     {:optional true} [:maybe :int]]
    [:entity_id    {:optional true} [:maybe :string]]
    [:created_at   {:optional true} [:maybe ms/TemporalInstant]]
-   [:updated_at   {:optional true} [:maybe ms/TemporalInstant]]])
+   [:updated_at   {:optional true} [:maybe ms/TemporalInstant]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::external-dashboard
   "A Dashboard as serialization writes it, with portable references in place of ids."

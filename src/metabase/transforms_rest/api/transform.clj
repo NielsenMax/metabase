@@ -108,7 +108,8 @@
    ;; Index methods requestable on the target table (driver capability); nil when unsupported. Set only by GET /:id.
    ;; Referenced by registry keyword (not a require) to avoid a transforms-rest -> driver module dependency; the schema
    ;; is registered by `metabase.driver`, which is loaded well before any response is coerced.
-   [:requestable_indexes {:optional true} [:maybe :metabase.driver/supported-index-methods]]])
+   [:requestable_indexes {:optional true} [:maybe :metabase.driver/supported-index-methods]]
+   [:worktree_id {:optional true} [:maybe pos-int?]]])
 
 (def ^:private TransformRunResponse
   [:map {:closed true}

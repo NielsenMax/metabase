@@ -158,7 +158,8 @@
                                  [:made_public_by_id  {:optional true} [:maybe ::lib.schema.id/user]]
                                  [:creator_id         {:optional true} [:maybe ::lib.schema.id/user]]
                                  [:entity_id          {:optional true} [:maybe :string]]
-                                 [:legacy_query       {:optional true} [:maybe :string]]])])]
+                                 [:legacy_query       {:optional true} [:maybe :string]]
+                                 [:worktree_id        {:optional true} [:maybe ms/PositiveInt]]])])]
     (into [:map {:closed true}] common)))
 
 (mr/def ::action.columns
@@ -211,14 +212,16 @@
   [:map {:closed true}
    [:action_id ::lib.schema.id/action]
    [:kind      ::lib.schema.common/keyword]
-   [:table_id  {:optional true} [:maybe ::lib.schema.id/table]]])
+   [:table_id  {:optional true} [:maybe ::lib.schema.id/table]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::implicit-action.update
   "What an update (or insert) of a ImplicitAction accepts: every column of `:implicit_action` except `id`, all optional."
   [:map {:closed true}
    [:action_id {:optional true} [:maybe ::lib.schema.id/action]]
    [:kind      {:optional true} [:maybe ::lib.schema.common/keyword]]
-   [:table_id  {:optional true} [:maybe ::lib.schema.id/table]]])
+   [:table_id  {:optional true} [:maybe ::lib.schema.id/table]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::query-action.dataset-query
   "The `:dataset_query` column of a QueryAction, decoded."
@@ -230,7 +233,8 @@
    [:action_id     ::lib.schema.id/action]
    [:database_id   ::lib.schema.id/database]
    [:dataset_query ::query-action.dataset-query]
-   [:legacy_query  [:maybe :string]]])
+   [:legacy_query  [:maybe :string]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::query-action.update
   "What an update (or insert) of a QueryAction accepts: every column of `:query_action` except `id`, all optional."
@@ -238,7 +242,8 @@
    [:action_id     {:optional true} [:maybe ::lib.schema.id/action]]
    [:database_id   {:optional true} [:maybe ::lib.schema.id/database]]
    [:dataset_query {:optional true} [:maybe ::query-action.dataset-query]]
-   [:legacy_query  {:optional true} [:maybe :string]]])
+   [:legacy_query  {:optional true} [:maybe :string]]
+   [:worktree_id {:optional true} [:maybe ms/PositiveInt]]])
 
 (mr/def ::execution.row-diff
   "One effect recorded against the `:effects` key of [[::execution-context]]: the before/after state of a row a

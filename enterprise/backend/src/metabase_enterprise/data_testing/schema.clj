@@ -170,7 +170,8 @@
    [subject       {:optional true} [:maybe subject-schema]]
    [:creator_id   {:optional true} ::lib.schema.id/user]
    [:created_at   {:optional true} ms/TemporalInstant]
-   [:updated_at   {:optional true} ms/TemporalInstant]])
+   [:updated_at   {:optional true} ms/TemporalInstant]
+   [:worktree_id  {:optional true} [:maybe ms/PositiveInt]]])
 
 (defn- test-update
   "What a client sends to update a test: any of its fields, with the id of its subject under `subject-key`, of schema
