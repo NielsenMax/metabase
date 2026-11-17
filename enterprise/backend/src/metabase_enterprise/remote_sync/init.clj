@@ -1,5 +1,6 @@
 (ns metabase-enterprise.remote-sync.init
   (:require
+   [metabase-enterprise.remote-sync.db :as remote-sync.db]
    [metabase-enterprise.remote-sync.models.remote-sync-task :as remote-sync.task]
    [metabase-enterprise.remote-sync.settings :as remote-sync.settings]
    [metabase-enterprise.remote-sync.stats]
@@ -16,9 +17,11 @@
 (set! *warn-on-reflection* true)
 
 (defn- remote-sync-init!
-  "Ends the tasks that stopped sending heartbeats, stops syncing collections when remote sync is off, and pulls the
-  synced branch into a read-only instance."
+  "Secures the tables of models added since the first worktree, ends the tasks that stopped sending heartbeats, stops
+  syncing collections when remote sync is off, and pulls the synced branch into a read-only instance."
   []
+  (when (and (remote-sync.settings/remote-sync-worktrees-enabled) (remote-sync.db/any-worktree?))
+    (remote-sync.db/ensure-row-level-security!))
   (remote-sync.task/supersede-stale-tasks!)
   (cond
     (nil? (setting/get-raw-value :remote-sync-url))

@@ -78,6 +78,7 @@
   {:definition transform-segment-definition})
 
 (doto :model/Segment
+  (derive :hook/worktree-id)
   (derive :metabase/model)
   (derive :hook/timestamped?)
   (derive :hook/entity-id)

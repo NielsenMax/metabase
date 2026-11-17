@@ -36,6 +36,7 @@
 (def ^:private action-sub-models [:model/QueryAction :model/ImplicitAction])
 
 (doto :model/Action
+  (derive :hook/worktree-id)
   (derive :metabase/model)
   (derive :hook/entity-id)
   (derive :hook/timestamped?)
@@ -45,10 +46,13 @@
   (derive model :metabase/model))
 
 (doto :model/QueryAction
+  (derive :hook/worktree-id)
   (derive :hook/search-index)
   (derive :hook/dependencies))
 
-(derive :model/ImplicitAction :hook/dependencies)
+(doto :model/ImplicitAction
+  (derive :hook/worktree-id)
+  (derive :hook/dependencies))
 
 (methodical/defmethod t2/primary-keys :model/QueryAction    [_model] [:action_id])
 (methodical/defmethod t2/primary-keys :model/ImplicitAction [_model] [:action_id])

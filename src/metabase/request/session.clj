@@ -1,6 +1,7 @@
 (ns metabase.request.session
   (:require
    [metabase.api.common :refer [*current-user* *current-user-id* *is-group-manager?* *is-superuser?* *is-data-analyst?*]]
+   [metabase.app-db.core :as mdb]
    [metabase.permissions.core :as perms]
    [metabase.request.db :as request.db]
    [metabase.request.schema :as request.schema]
@@ -28,7 +29,7 @@
 
 (mu/defn do-with-current-user
   "Impl for [[with-current-user]] and [[metabase.server.middleware.session/with-current-user-for-request]]"
-  [{:keys [metabase-user-id is-superuser? is-data-analyst? user-locale settings is-group-manager?]} :- [:maybe [:or ::request.schema/current-user-info ::request.schema/request]]
+  [{:keys [metabase-user-id is-superuser? is-data-analyst? user-locale settings is-group-manager? worktree-id]} :- [:maybe [:or ::request.schema/current-user-info ::request.schema/request]]
    thunk :- ifn?]
   (binding [*current-user-id*              metabase-user-id
             i18n/*user-locale*             user-locale
@@ -46,10 +47,11 @@
                                                                (user/user-local-settings metabase-user-id))))
                   (binding [*user-local-values-user-id* metabase-user-id]
                     (thunk)))))]
-      (do-with-user-local-values
-       (fn []
-         (perms/with-sandboxes-for-user metabase-user-id
-           (thunk)))))))
+      (mdb/with-worktree-id worktree-id
+        (do-with-user-local-values
+         (fn []
+           (perms/with-sandboxes-for-user metabase-user-id
+             (thunk))))))))
 
 (defn with-current-user-fetch-user-for-id
   "Part of the impl for `with-current-user` -- don't use this directly."

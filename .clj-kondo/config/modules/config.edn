@@ -2497,7 +2497,12 @@
   {:team       "Data Apps"
    :codeowners true
    :api  #{metabase.remote-sync.core metabase.remote-sync.schema}
-   :uses #{premium-features serialization util}}
+   :uses #{models
+           premium-features
+           serialization
+           util}
+   :model-exports #{:model/RemoteSyncWorktree}
+   :model-imports #{:model/User}}
 
   request
   {:team "UX West"
@@ -2508,6 +2513,7 @@
            metabase.request.user-agent}
    :uses #{analytics.interface
            api
+           app-db
            embedding
            lib.schema
            permissions
@@ -4543,6 +4549,7 @@
                     :model/Glossary
                     :model/Measure
                     :model/NativeQuerySnippet
+                    :model/RemoteSyncWorktree
                     :model/Segment
                     :model/TableUserSettings
                     :model/Timeline

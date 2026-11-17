@@ -12,6 +12,7 @@
 (methodical/defmethod t2/table-name :model/TimelineEvent  [_model] :timeline_event)
 
 (doto :model/TimelineEvent
+  (derive :hook/worktree-id)
   (derive :metabase/model)
   (derive :hook/timestamped?)
   (derive :hook/entity-id))

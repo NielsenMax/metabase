@@ -328,6 +328,7 @@
   (maybe-localize-system-collection-name collection))
 
 (doto :model/Collection
+  (derive :hook/worktree-id)
   (derive :metabase/model)
   (derive :hook/entity-id))
 

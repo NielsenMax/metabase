@@ -11,6 +11,7 @@
 (methodical/defmethod t2/table-name :model/Glossary [_model] :glossary)
 
 (doto :model/Glossary
+  (derive :hook/worktree-id)
   (derive :metabase/model)
   (derive :hook/timestamped?)
   (derive :hook/entity-id))

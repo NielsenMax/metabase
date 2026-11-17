@@ -4,6 +4,7 @@
   (:require
    [metabase-enterprise.remote-sync.schema :as remote-sync.schema]
    [metabase.lib.schema.id :as lib.schema.id]
+   [metabase.models.resolution :as models.resolution]
    [metabase.remote-sync.core :as remote-sync]
    [metabase.serialization.core :as serialization]
    [metabase.util :as u]
@@ -177,3 +178,80 @@
   "A map of User ID to User for `user-ids`."
   [user-ids :- [:sequential [:maybe ::lib.schema.id/user]]]
   (t2/select-pk->fn identity :model/User :id [:in user-ids]))
+
+(mu/defn worktrees :- [:sequential ::remote-sync.schema/worktree]
+  "Every worktree, by branch."
+  []
+  (t2/select :model/RemoteSyncWorktree {:order-by [[:branch :asc] [:id :asc]]}))
+
+(mu/defn worktree :- [:maybe ::remote-sync.schema/worktree]
+  "The worktree with `worktree-id`, or nil."
+  [worktree-id :- ms/PositiveInt]
+  (t2/select-one :model/RemoteSyncWorktree :id [:auto/param worktree-id]))
+
+(mu/defn worktree-branch :- [:maybe :string]
+  "The branch of the worktree with `worktree-id`, or nil."
+  [worktree-id :- ms/PositiveInt]
+  (t2/select-one-fn :branch :model/RemoteSyncWorktree :id [:auto/param worktree-id]))
+
+(defn- worktree-tables
+  "The tables of the models whose rows belong to worktrees, which derive `:hook/worktree-id`."
+  []
+  (doseq [model (keys models.resolution/model->namespace)]
+    (t2/resolve-model model))
+  (sort (for [model (descendants :hook/worktree-id)
+              :when (contains? (parents model) :hook/worktree-id)]
+          (name (t2/table-name model)))))
+
+(defn- worktree-policy-sql
+  "The row-level security policy that shows a connection the rows of `table` in the worktree it works in, every row
+  when it works across every worktree, and the Trash collection everywhere."
+  [table]
+  (format "CREATE POLICY worktree ON %s USING (metabase_worktree_id() IS NULL OR COALESCE(worktree_id, 0) = metabase_worktree_id()%s)"
+          table
+          (if (= "collection" table) " OR type = 'trash'" "")))
+
+(mu/defn ensure-row-level-security!
+  "Turns row-level security on, with its policy, for each table of the models whose rows belong to worktrees, leaving the
+  tables that already have both alone."
+  []
+  (let [tables   (worktree-tables)
+        policies (into #{} (map :tablename)
+                       (t2/query ["SELECT tablename FROM pg_policies WHERE policyname = 'worktree' AND schemaname = current_schema()"]))
+        secured  (into #{} (map :relname)
+                       (t2/query ["SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+                                   WHERE n.nspname = current_schema() AND c.relrowsecurity AND c.relforcerowsecurity"]))]
+    (doseq [table tables]
+      (when-not (policies table)
+        (t2/query [(worktree-policy-sql table)]))
+      (when-not (secured table)
+        (t2/query [(format "ALTER TABLE %s ENABLE ROW LEVEL SECURITY" table)])
+        (t2/query [(format "ALTER TABLE %s FORCE ROW LEVEL SECURITY" table)])))))
+
+(mu/defn any-worktree? :- :boolean
+  "Whether any worktree exists."
+  []
+  (t2/exists? :model/RemoteSyncWorktree))
+
+(mu/defn insert-worktree! :- ::remote-sync.schema/worktree
+  "Insert the worktree `worktree`, securing the tables of worktree content first, and return it."
+  [worktree :- ::remote-sync.schema/worktree.update]
+  (t2/with-transaction [_conn]
+    (ensure-row-level-security!)
+    (t2/insert-returning-instance! :model/RemoteSyncWorktree worktree)))
+
+(mu/defn update-worktree!
+  "Set the columns `changes` of the worktree with `worktree-id`."
+  [worktree-id :- ms/PositiveInt
+   changes     :- ::remote-sync.schema/worktree.update]
+  (t2/update! :model/RemoteSyncWorktree :id [:auto/param worktree-id] changes))
+
+(mu/defn delete-worktree!
+  "Delete the worktree with `worktree-id`, the database deleting its content and moving its users to the main app."
+  [worktree-id :- ms/PositiveInt]
+  (t2/delete! :model/RemoteSyncWorktree :id [:auto/param worktree-id]))
+
+(mu/defn row-level-security-bypassed? :- :boolean
+  "Whether the app DB role skips row-level security, as a superuser or a role with BYPASSRLS does."
+  []
+  (boolean (:bypassed (t2/query-one ["SELECT rolsuper OR rolbypassrls AS bypassed FROM pg_roles WHERE rolname = current_user"]))))
